@@ -22,7 +22,7 @@ from openmm import MonteCarloBarostat
 sim.minimizeEnergy()
 
 # add reporters
-sim.reporters.append(PDBReporter('../output/output.pdb', 100))
+sim.reporters.append(PDBReporter('output/output.pdb', 100))
 sim.reporters.append(StateDataReporter(stdout, 100, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
 
 # add barostat and run
