@@ -22,5 +22,5 @@ sim = _smiles_to_simulation(
 )
 
 context = sim.context
-platform = Platform.getPlatformByName("CUDA")
+platform = Platform.getPlatformByName("OpenCl")
 print(platform.getPropertyValue(context, "DeviceIndex"))
