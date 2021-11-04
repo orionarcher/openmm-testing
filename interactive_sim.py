@@ -25,6 +25,9 @@ sim = _smiles_to_simulation(
     platformProperties=properties,
 )
 
+sim.reporters.append(StateDataReporter(stdout, 100, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
+
+
 context = sim.context
 platform = Platform.getPlatformByName("OpenCL")
 print(platform.getPropertyValue(context, "DeviceIndex"))
