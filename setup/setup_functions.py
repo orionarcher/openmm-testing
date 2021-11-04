@@ -80,12 +80,14 @@ def _smiles_to_coordinates(smiles, counts, box_size):
 from openmm import MonteCarloBarostat
 
 def _smiles_to_simulation(
-    smiles, counts, box_size, integrator=None, **sys_kwargs
+    smiles, counts, box_size, integrator=None, platform_properties=None, **sys_kwargs
 ):
     if integrator is None:
         integrator = LangevinMiddleIntegrator(
             300 * kelvin, 1 / picosecond, 0.001 * picoseconds
         )
+    # if not platform_properties:
+    #     platform_properties = {}
     topology = _smiles_to_topology(smiles, counts)
     coordinates = _smiles_to_coordinates(smiles, counts, box_size)
     openff_mols = [
@@ -100,7 +102,7 @@ def _smiles_to_simulation(
     structure.box = make_box_list(box_size, 'openmm')
     system = structure.createSystem(nonbondedMethod=PME, nonbondedCutoff=1 * nanometer)
     # system.addForce(MonteCarloBarostat(1 * atmosphere, 300 * kelvin, 10))
-    simulation = Simulation(topology, system, integrator)
+    simulation = Simulation(topology, system, integrator, platformProperties={"DeviceIndex": "0,1,2,3"})
     simulation.context.setPositions(coordinates)
     simulation.context.setPeriodicBoxVectors((4, 0, 0), (0, 4, 0), (0, 0, 4))
     return simulation

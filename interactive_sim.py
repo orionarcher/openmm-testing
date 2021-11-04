@@ -15,12 +15,16 @@ PF6 = "F[P-](F)(F)(F)(F)F"
 TFEA = "CC(=O)OCC(F)(F)F"
 Li = "[Li+]"
 
+
+properties = {"DeviceIndex": "0,1,2,3"}
+
 sim = _smiles_to_simulation(
     [EA],
     [600],
     80,
+    platformProperties=properties,
 )
 
 context = sim.context
-platform = Platform.getPlatformByName("OpenCl")
+platform = Platform.getPlatformByName("OpenCL")
 print(platform.getPropertyValue(context, "DeviceIndex"))
