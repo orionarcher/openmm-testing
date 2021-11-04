@@ -12,7 +12,7 @@ from openff.toolkit.typing.engines import smirnoff
 import openff.toolkit as tk
 import openff
 from openff.toolkit import topology
-
+from openmm import Platform
 
 def smile_to_structure(smile):
     mol = pybel.readstring("smi", smile)
@@ -102,7 +102,9 @@ def _smiles_to_simulation(
     structure.box = make_box_list(box_size, 'openmm')
     system = structure.createSystem(nonbondedMethod=PME, nonbondedCutoff=1 * nanometer)
     # system.addForce(MonteCarloBarostat(1 * atmosphere, 300 * kelvin, 10))
-    simulation = Simulation(topology, system, integrator, platformProperties={"DeviceIndex": "0,1,2,3"})
+    platform = Platform.getPlatformByName('OpenCL')
+    properties = {"DeviceIndex": "1"}
+    simulation = Simulation(topology, system, integrator, platform, properties)
     simulation.context.setPositions(coordinates)
     simulation.context.setPeriodicBoxVectors((4, 0, 0), (0, 4, 0), (0, 0, 4))
     return simulation
