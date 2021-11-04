@@ -29,5 +29,5 @@ sim.reporters.append(StateDataReporter(stdout, 100, step=True, potentialEnergy=T
 
 
 context = sim.context
-platform = Platform.getPlatformByName("OpenCL")
-print(platform.getPropertyValue(context, "DeviceIndex"))
+platform = context.getPlatform()
+print(platform.getPropertyNames())
