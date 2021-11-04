@@ -20,7 +20,7 @@ properties = {"DeviceIndex": "0,1,2,3"}
 
 sim = _smiles_to_simulation(
     [EA],
-    [600],
+    [3000],
     80,
     platformProperties=properties,
 )
@@ -31,3 +31,21 @@ sim.reporters.append(StateDataReporter(stdout, 100, step=True, potentialEnergy=T
 context = sim.context
 platform = context.getPlatform()
 print(platform.getPropertyNames())
+
+# platform.getPropertyValue(context, "DeviceIndex")
+# sim.minimizeEnergy()
+# sim.step(100000)
+
+
+# timing:
+# 3000 EA system
+
+
+# 600 EA system
+# 1 device OpenCL Perlmutter: 31s
+# 2 device OpenCL Perlmutter: 39s
+# 4 device OpenCL Perlmutter: 40s
+# 1 node cori haswell: 13 min
+# lammps extrapolated: 13.2 min
+# my computer 16 threads, extrapolated: 14 min
+# my computer OpenCL, extrapolated: 19 min
