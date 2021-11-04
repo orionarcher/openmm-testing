@@ -16,7 +16,12 @@ from openmm.unit import *
 from openmm.app import PDBReporter
 from openmm.app import StateDataReporter
 from sys import stdout
-from openmm import MonteCarloBarostat
+from openmm import MonteCarloBarostat, Platform
+
+
+context = sim.context
+platform = Platform.getPlatformByName("OpenCL")
+print(platform.getPropertyValue(context, "DeviceIndex"))
 
 # energy minimization
 sim.minimizeEnergy()
