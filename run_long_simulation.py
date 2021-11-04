@@ -32,18 +32,17 @@ integrator = sim.context.getIntegrator()
 barostat_force_index = system.addForce(MonteCarloBarostat(1*atmosphere, 300*kelvin, 10))
 print(system.usesPeriodicBoundaryConditions())
 sim.context.reinitialize(preserveState=True)
-sim.step(1000)
+sim.step(1000000)
 system.removeForce(barostat_force_index)
 sim.context.reinitialize(preserveState=True)
-sim.step(1000)
-for i in range(10):
-    integrator.setTemperature(300 * kelvin + 10 * i * kelvin)
-    sim.step(100)
+for i in range(1000):
+    integrator.setTemperature(300 * kelvin + 0.1 * i * kelvin)
+    sim.step(1000)
 
-sim.step(1000)
+sim.step(1000000)
 
-for i in range(1, 11):
-    integrator.setTemperature(400 * kelvin - 10 * i * kelvin)
-    sim.step(100)
+for i in range(1, 1001):
+    integrator.setTemperature(400 * kelvin - 0.1 * i * kelvin)
+    sim.step(1000)
 
-sim.step(1000)
+sim.step(5000000)
