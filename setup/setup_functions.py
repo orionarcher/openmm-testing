@@ -13,8 +13,20 @@ import openff.toolkit as tk
 import openff
 from openff.toolkit import topology
 from openmm import Platform
+import numpy as np
 
 def smile_to_structure(smile):
+    """
+    Converts a SMILE to a Parmed structure.
+
+    Parameters
+    ----------
+    smile: a SMILE.
+
+    Returns
+    -------
+    Parmed.Structure
+    """
     mol = pybel.readstring("smi", smile)
     mol.addh()
     mol.make3D()
@@ -25,6 +37,18 @@ def smile_to_structure(smile):
 
 
 def _smiles_to_topology(smiles, counts):
+    """
+    Converts a set of SMILEs and counts to an OpenMM Topology object.
+
+    Parameters
+    ----------
+    smiles: a list of SMILEs.
+    counts: counts for each SMILE.
+
+    Returns
+    -------
+
+    """
     assert len(smiles) == len(counts), "smiles and counts must be the same length"
     structures = [smile_to_structure(smile) for smile in smiles]
     combined_structs = parmed.Structure()
@@ -34,6 +58,17 @@ def _smiles_to_topology(smiles, counts):
 
 
 def smile_to_mol(smile):
+    """
+    Converts a SMILE to a Pymatgen Molecule.
+
+    Parameters
+    ----------
+    smile: a SMILE.
+
+    Returns
+    -------
+    Pymatgen.Molecule
+    """
     mol = pybel.readstring("smi", smile)
     mol.addh()
     mol.make3D()
@@ -77,10 +112,38 @@ def _smiles_to_coordinates(smiles, counts, box_size):
     raw_coordinates = coordinates.loc[:, "x":"z"].values
     return raw_coordinates
 
-from openmm import MonteCarloBarostat
+def _smiles_to_cube_size(smiles, counts, density):
+    cm3_to_A3 = 1e24
+    NA = 6.02214e23
+    mols = [smile_to_mol(smile) for smile in smiles]
+    mol_mw = np.array([mol.structure.composition.weight for mol in mols])
+    counts = np.array(counts)
+    total_weight = sum(mol_mw * counts)
+    box_volume = total_weight * cm3_to_A3 / (NA * density)
+    side_length = box_volume ** (1 / 3)
+    return side_length
+
+
+def _smiles_to_system(smiles, counts, density=1.5):
+    topology = _smiles_to_topology(smiles, counts)
+    box_size = _smiles_to_cube_size(smiles, counts, density)
+    coordinates = _smiles_to_coordinates(smiles, counts, box_size)
+    openff_mols = [
+        openff.toolkit.topology.Molecule.from_smiles(smile) for smile in smiles
+    ]
+    openff_forcefield = smirnoff.ForceField("openff_unconstrained-2.0.0.offxml")
+    openff_topology = openff.toolkit.topology.Topology.from_openmm(
+        topology, openff_mols
+    )
+    system = openff_forcefield.create_openmm_system(openff_topology)
+    structure = parmed.openmm.load_topology(topology, system)
+    structure.box = make_box_list(box_size, 'openmm')
+    system = structure.createSystem(nonbondedMethod=PME, nonbondedCutoff=1 * nanometer)
+    return system, topology
+
 
 def _smiles_to_simulation(
-    smiles, counts, box_size, integrator=None, platform_properties=None, **sys_kwargs
+    smiles, counts, box_size, integrator=None, properties=None, device_index=None, **sys_kwargs
 ):
     if integrator is None:
         integrator = LangevinMiddleIntegrator(
@@ -97,14 +160,14 @@ def _smiles_to_simulation(
     openff_topology = openff.toolkit.topology.Topology.from_openmm(
         topology, openff_mols
     )
+    openff_topology.box_vectors = [box_size, box_size, box_size] * angstrom
     system = openff_forcefield.create_openmm_system(openff_topology)
-    structure = parmed.openmm.load_topology(topology, system)
-    structure.box = make_box_list(box_size, 'openmm')
-    system = structure.createSystem(nonbondedMethod=PME, nonbondedCutoff=1 * nanometer)
+    # structure = parmed.openmm.load_topology(topology, system)
+    # structure.box = make_box_list(box_size, 'openmm')
+    # system = structure.createSystem(nonbondedMethod=PME, nonbondedCutoff=1 * nanometer)
     # system.addForce(MonteCarloBarostat(1 * atmosphere, 300 * kelvin, 10))
     platform = Platform.getPlatformByName('OpenCL')
-    properties = {"DeviceIndex": "0,1"}
-    simulation = Simulation(topology, system, integrator, platform, properties)
+    simulation = Simulation(topology, system, integrator, platform, platformProperties=properties)
     simulation.context.setPositions(coordinates)
-    simulation.context.setPeriodicBoxVectors((4, 0, 0), (0, 4, 0), (0, 0, 4))
+    # simulation.context.setPeriodicBoxVectors((4, 0, 0), (0, 4, 0), (0, 0, 4))
     return simulation

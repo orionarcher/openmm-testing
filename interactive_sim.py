@@ -20,9 +20,9 @@ properties = {"DeviceIndex": "0,1,2,3"}
 
 sim = _smiles_to_simulation(
     [EA],
-    [3000],
-    80,
-    platformProperties=properties,
+    [600],
+    40,
+    properties=properties,
 )
 
 sim.reporters.append(StateDataReporter(stdout, 100, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
@@ -32,9 +32,11 @@ context = sim.context
 platform = context.getPlatform()
 print(platform.getPropertyNames())
 
-# platform.getPropertyValue(context, "DeviceIndex")
-# sim.minimizeEnergy()
-# sim.step(100000)
+print(platform.getPropertyValue(context, "DeviceIndex"))
+sim.minimizeEnergy()
+sim.step(1000)
+print('hi')
+# sim.saveState("state_test")
 
 
 # timing:
