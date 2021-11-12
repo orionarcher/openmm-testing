@@ -10,13 +10,15 @@ from openmm import MonteCarloBarostat, Platform
 from openmm import *
 from openmm.app import *
 
+import time
+
 EA = "CCOC(C)=O"
 PF6 = "F[P-](F)(F)(F)(F)F"
 TFEA = "CC(=O)OCC(F)(F)F"
 Li = "[Li+]"
 
 
-properties = {"DeviceIndex": "0,1,2,3"}
+properties = {"DeviceIndex": "1"}
 
 sim = _smiles_to_simulation(
     [EA],
@@ -32,9 +34,13 @@ context = sim.context
 platform = context.getPlatform()
 print(platform.getPropertyNames())
 
+
 print(platform.getPropertyValue(context, "DeviceIndex"))
+start = time.time()
 sim.minimizeEnergy()
 sim.step(1000)
+end = time.time()
+print(end - start)
 print('hi')
 # sim.saveState("state_test")
 
