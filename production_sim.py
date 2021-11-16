@@ -23,7 +23,7 @@ rank = comm.Get_rank()
 
 print("rank: ", rank)
 
-properties = {"DeviceIndex": f"{1}"}
+properties = {"DeviceIndex": f"{rank}"}
 
 scaling_dict = {0: 0.7, 1: 0.8, 2: 0.9, 3: 1.0}
 charge_scaling = scaling_dict[rank]
@@ -34,7 +34,7 @@ sim = _smiles_to_simulation(
     [EA, TFEA, FEC, Li, PF6],
     [500, 100, 50, 50, 50],
     50,
-    charge_scaling=0.7,
+    charge_scaling=charge_scaling,
     properties=properties,
 )
 
