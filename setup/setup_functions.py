@@ -131,7 +131,11 @@ def _smiles_to_system(smiles, counts, density=1.5):
     openff_mols = [
         openff.toolkit.topology.Molecule.from_smiles(smile) for smile in smiles
     ]
+    pf6_minus = topology.Molecule.from_smiles("F[P-](F)(F)(F)(F)F")
+    pf6_minus.partial_charges = np.asarray([-0.39, 1.34, -0.39, -0.39, -0.39, -0.39, -0.39]) * elementary_charge
+    library_charge_type = smirnoff.parameters.LibraryChargeHandler.LibraryChargeType.from_molecule(pf6_minus)
     openff_forcefield = smirnoff.ForceField("openff_unconstrained-2.0.0.offxml")
+    openff_forcefield["LibraryCharges"].add_parameter(parameter=library_charge_type)
     openff_topology = openff.toolkit.topology.Topology.from_openmm(
         topology, openff_mols
     )
@@ -143,7 +147,7 @@ def _smiles_to_system(smiles, counts, density=1.5):
 
 
 def _smiles_to_simulation(
-    smiles, counts, box_size, integrator=None, properties=None, device_index=None, **sys_kwargs
+    smiles, counts, box_size, integrator=None, properties=None, charge_scaling=1, device_index=None, **sys_kwargs
 ):
     if integrator is None:
         integrator = LangevinMiddleIntegrator(
@@ -156,18 +160,26 @@ def _smiles_to_simulation(
     openff_mols = [
         openff.toolkit.topology.Molecule.from_smiles(smile) for smile in smiles
     ]
+    pf6_minus = openff.toolkit.topology.Molecule.from_smiles("F[P-](F)(F)(F)(F)F")
+    pf6_minus.partial_charges = np.asarray([-0.39, 1.34, -0.39, -0.39, -0.39, -0.39, -0.39]) * charge_scaling * elementary_charge
+    pf6_charge_type = smirnoff.parameters.LibraryChargeHandler.LibraryChargeType.from_molecule(pf6_minus)
+    li_plus = openff.toolkit.topology.Molecule.from_smiles("[Li+]")
+    li_plus.partial_charges = np.asarray([1.0]) * charge_scaling * elementary_charge
+    li_charge_type = smirnoff.parameters.LibraryChargeHandler.LibraryChargeType.from_molecule(li_plus)
     openff_forcefield = smirnoff.ForceField("openff_unconstrained-2.0.0.offxml")
+    openff_forcefield["LibraryCharges"].add_parameter(parameter=pf6_charge_type)
+    openff_forcefield["LibraryCharges"].add_parameter(parameter=li_charge_type)
     openff_topology = openff.toolkit.topology.Topology.from_openmm(
         topology, openff_mols
     )
     openff_topology.box_vectors = [box_size, box_size, box_size] * angstrom
-    system = openff_forcefield.create_openmm_system(openff_topology)
+    system = openff_forcefield.create_openmm_system(openff_topology, allow_nonintegral_charges=True)
     # structure = parmed.openmm.load_topology(topology, system)
     # structure.box = make_box_list(box_size, 'openmm')
     # system = structure.createSystem(nonbondedMethod=PME, nonbondedCutoff=1 * nanometer)
     # system.addForce(MonteCarloBarostat(1 * atmosphere, 300 * kelvin, 10))
-    # platform = Platform.getPlatformByName('OpenCL')
-    simulation = Simulation(topology, system, integrator, platformProperties=properties)
+    platform = Platform.getPlatformByName('OpenCL')
+    simulation = Simulation(topology, system, integrator, platform=platform, platformProperties=properties)
     simulation.context.setPositions(coordinates)
     # simulation.context.setPeriodicBoxVectors((4, 0, 0), (0, 4, 0), (0, 0, 4))
     return simulation

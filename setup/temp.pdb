@@ -1,0 +1,4 @@
+REMARK   1 CREATED WITH OPENMM 7.6, 2021-11-12
+HETATM    1 LI   UNL A   1       0.000   0.000   0.000  1.00  0.00          Li  
+TER       2      UNL A   1
+END

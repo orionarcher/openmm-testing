@@ -21,9 +21,10 @@ Li = "[Li+]"
 properties = {"DeviceIndex": "1"}
 
 sim = _smiles_to_simulation(
-    [EA],
-    [600],
-    40,
+    [EA, TFEA, Li, PF6],
+    [600, 100, 50, 50],
+    50,
+    charge_scaling=0.7,
     properties=properties,
 )
 
@@ -45,8 +46,16 @@ print('hi')
 # sim.saveState("state_test")
 
 
-# timing:
-# 3000 EA system
+# 600 EA system
+# 50000 steps no energy min
+# 1 device OpenCL Perlmutter: 13.53s
+# 2 device OpenCL Perlmutter: 17.36
+# 4 device OpenCL Perlmutter: 18.49
+# 1 node cori haswell: 13 min
+# lammps extrapolated: 13.2 min
+# my computer 16 threads, extrapolated: 14 min
+# my computer OpenCL, extrapolated: 19 min
+
 
 
 # 600 EA system

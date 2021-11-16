@@ -98,24 +98,5 @@ EA_simulation.saveState('../simulations/EA_simulation.xml')
 positions = EA_simulation.context.getState(getPositions=True).getPositions()
 PDBFile.writeFile(EA_simulation.topology, positions, open('../scratch/output.pdb', 'w'))
 
-# target_smile = EA = TFEA
-#
-# mol = smile_to_mol(target_smile)
-# openmm_system = smile_to_openmm_system(target_smile)
-# pbd = smile_to_pbd_file(target_smile)
-# TFEA_sys = pmd.openmm.load_topology(pbd.topology, openmm_system)
-#
-# coordinates = get_coordinates([mol], [600], EA_box)
-# coord_values = coordinates.loc[:, 'x':'z'].values
-# TFEA_600 = TFEA_sys * 600
-# TFEA_600.coordinates = coord_values
-# TFEA_600.box = TFEA_box
-# TFEA_system = TFEA_600.createSystem(nonbondedMethod=PME, nonbondedCutoff=1*nanometer)
-#
-# integrator = LangevinMiddleIntegrator(300*kelvin, 1/picosecond, 0.001*picoseconds)
-# TFEA_simulation = Simulation(EA_600.topology, EA_system, integrator)
-# TFEA_simulation.saveState('../simulations/TFEA_simulation.xml')
-
-
 print('hi')
 
