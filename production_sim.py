@@ -68,13 +68,13 @@ sim.context.reinitialize(preserveState=True)
 # annealing
 for i in np.arange(0, 100, 1):
     integrator.setTemperature(300 * kelvin + 1 * i * kelvin)
-    sim.step(10)
+    sim.step(100)
 
-sim.step(1000)
+sim.step(10000)
 
 for i in np.arange(100, 0, -1):
     integrator.setTemperature(300 * kelvin + 1 * i * kelvin)
-    sim.step(10)
+    sim.step(100)
 
 sim.step(100)
 
