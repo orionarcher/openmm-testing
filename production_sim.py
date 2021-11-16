@@ -46,7 +46,9 @@ integrator = context.getIntegrator()
 positions = context.getState(getPositions=True).getPositions(asNumpy=True)
 
 sim.reporters.append(StateDataReporter("output/state.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
+sim.reporters.append(StateDataReporter(stdout, 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
 sim.reporters.append(DCDReporter("output/test.dcd", 1000))
+
 
 pdb_reporter = PDBReporter("output/test.pdb", 1000)
 pdb_reporter.report(sim, context.getState(getPositions=True))
