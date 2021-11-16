@@ -12,7 +12,7 @@ import time
 EA = "CCOC(C)=O"
 PF6 = "F[P-](F)(F)(F)(F)F"
 TFEA = "CC(=O)OCC(F)(F)F"
-FEC = "C1C(OC(=O)O1)F"
+FEC = "O=C1OC[C@H](F)O1"
 Li = "[Li+]"
 
 

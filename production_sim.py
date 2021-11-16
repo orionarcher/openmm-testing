@@ -11,7 +11,7 @@ import time
 
 EA = "CCOC(C)=O"
 PF6 = "F[P-](F)(F)(F)(F)F"
-FEC = "C1C(OC(=O)O1)F"
+FEC = "O=C1OC[C@H](F)O1"
 TFEA = "CC(=O)OCC(F)(F)F"
 Li = "[Li+]"
 
@@ -52,8 +52,6 @@ sim.reporters.append(DCDReporter("output/test.dcd", 1000))
 
 pdb_reporter = PDBReporter("output/test.pdb", 1000)
 pdb_reporter.report(sim, context.getState(getPositions=True))
-
-PDBFile("output/test2.pdb")
 
 start = time.time()
 
