@@ -45,10 +45,12 @@ system = context.getSystem()
 integrator = context.getIntegrator()
 positions = context.getState(getPositions=True).getPositions(asNumpy=True)
 
-sim.reporters.append(StateDataReporter(f"TFEA_output/state_{charge_scaling}.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
-sim.reporters.append(DCDReporter(f"TFEA_output/traj_{charge_scaling}.dcd", 1000))
+charge_string = str(charge_scaling).replace(".", "_")
 
-pdb_reporter = PDBReporter(f"TFEA_output/top_{charge_scaling}.pdb", 1)
+sim.reporters.append(StateDataReporter(f"TFEA_output/state_{charge_string}.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
+sim.reporters.append(DCDReporter(f"TFEA_output/traj_{charge_string}.dcd", 1000))
+
+pdb_reporter = PDBReporter(f"TFEA_output/top_{charge_string}.pdb", 1)
 pdb_reporter.report(sim, context.getState(getPositions=True))
 
 start = time.time()
