@@ -15,6 +15,7 @@ TFEA = "CC(=O)OCC(F)(F)F"
 FEC = "O=C1OC[C@H](F)O1"
 Li = "[Li+]"
 
+import os
 
 from mpi4py import MPI
 
@@ -47,10 +48,13 @@ positions = context.getState(getPositions=True).getPositions(asNumpy=True)
 
 charge_string = str(charge_scaling).replace(".", "_")
 
-sim.reporters.append(StateDataReporter(f"TFEA_output/state_{charge_string}.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
-sim.reporters.append(DCDReporter(f"TFEA_output/traj_{charge_string}.dcd", 1000))
+output_dir = os.mkdir(f"TFEA_output_{charge_string}")
 
-pdb_reporter = PDBReporter(f"TFEA_output/top_{charge_string}.pdb", 1)
+
+sim.reporters.append(StateDataReporter(f"TFEA_output_{charge_string}/state_{charge_string}.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
+sim.reporters.append(DCDReporter(f"TFEA_output_{charge_string}/traj_{charge_string}.dcd", 1000))
+
+pdb_reporter = PDBReporter(f"TFEA_output_{charge_string}/top_{charge_string}.pdb", 1)
 pdb_reporter.report(sim, context.getState(getPositions=True))
 
 start = time.time()
