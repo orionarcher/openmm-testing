@@ -1,7 +1,7 @@
 from mpi4py import MPI
 
-from pymatgen.openmm.io.generators import OpenMMSolutionGen
-from pymatgen.openmm.io.simulations import equilibrate_pressure, anneal
+from pymatgen.io.openmm.generators import OpenMMSolutionGen
+from pymatgen.io.openmm.simulations import equilibrate_pressure, anneal
 
 EA = "CCOC(C)=O"
 PF6 = "F[P-](F)(F)(F)(F)F"
