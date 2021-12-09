@@ -19,7 +19,7 @@ temperature_dict = {0: 298, 1: 273, 2: 253, 3: 233}
 temperature = temperature_dict[int(rank)]
 
 generator = OpenMMSolutionGen(
-	charge_scaling={Li: 0.8, PF6: 0.8},
+	partial_charge_scaling={Li: 0.8, PF6: 0.8},
 	temperature=temperature
 	)
 

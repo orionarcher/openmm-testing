@@ -23,7 +23,7 @@ EA_TFEA_FEC = {
 amounts = EA_TFEA_FEC[int(rank)]
 
 generator = OpenMMSolutionGen(
-	charge_scaling={Li: 0.8, PF6: 0.8}
+	partial_charge_scaling={Li: 0.8, PF6: 0.8}
 	)
 
 input_set = generator.get_input_set(
