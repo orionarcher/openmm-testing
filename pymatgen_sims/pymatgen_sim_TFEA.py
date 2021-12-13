@@ -3,6 +3,7 @@ from mpi4py import MPI
 from pymatgen.io.openmm.generators import OpenMMSolutionGen
 from pymatgen.io.openmm.simulations import equilibrate_pressure, anneal
 
+
 EA = "CCOC(C)=O"
 PF6 = "F[P-](F)(F)(F)(F)F"
 TFEA = "CC(=O)OCC(F)(F)F"
@@ -29,5 +30,5 @@ input_set = generator.get_input_set(
 )
 
 properties = {"DeviceIndex": f"{rank}"}
-platform = Platform.getPlatformByName('OpenCL')
+platform = openmm.Platform.getPlatformByName('OpenCL')
 input_set.get_simulation(platform, {"DeviceIndex": str(rank)})

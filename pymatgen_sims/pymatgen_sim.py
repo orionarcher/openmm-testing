@@ -8,8 +8,8 @@ import os
 
 from mpi4py import MPI
 
-from pymatgen.openmm.io.generators import OpenMMSolutionGen
-from pymatgen.openmm.io.simulations import equilibrate_pressure, anneal
+from pymatgen.io.openmm.generators import OpenMMSolutionGen
+from pymatgen.io.openmm.simulations import equilibrate_pressure, anneal
 
 
 comm = MPI.COMM_WORLD
@@ -17,7 +17,7 @@ rank = comm.Get_rank()
 
 print("rank: ", rank)
 
-temperature = 
+temperature = 1
 print("charge scaling: ", charge_scaling)
 properties = {"DeviceIndex": f"{rank}"}
 
