@@ -25,7 +25,7 @@ if rank < 4:
     properties = {"DeviceIndex": f"{rank}"}
     platform = Platform.getPlatformByName("OpenCL")
     sim = input_set.get_simulation(
-        platform=platform, platformProperties={"DeviceIndex": str(rank)}
+        platformProperties={"DeviceIndex": str(rank)}
     )
     os.mkdir('mixed_runs')
     sim.reporters.append(StateDataReporter(f"mixed_runs/{name}/state.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
