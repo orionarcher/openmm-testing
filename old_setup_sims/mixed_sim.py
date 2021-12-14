@@ -26,25 +26,29 @@ print("rank: ", rank)
 
 properties = {"DeviceIndex": f"{rank}"}
 
-temperature_dict = {
-    0: 298,
-    1: 273,
-    2: 253,
-    3: 233,
+EA_TFEA_FEC = {
+    0: {"EA": 300, "TFEA": 1, "FEC": 300},
+    1: {"EA": 300, "TFEA": 300, "FEC": 1},
+    2: {"EA": 1, "TFEA": 300, "FEC": 300},
+    3: {"EA": 250, "TFEA": 250, "FEC": 100},
 }
-temperature = temperature_dict[rank]
+amounts = EA_TFEA_FEC[rank]
 
-print("temp: ", temperature)
+run_names = {  # change
+    0: "300_EA_300_FEC",
+    1: "300_EA_300_TFEA",
+    2: "300_TFEA_300_FEC",
+    3: "250_EA_250_TFEA_100_FEC",
+}
+name = run_names[rank]
 
 sim = _smiles_to_simulation(
-    [TFEA, FEC, Li, PF6],
-    [512, 88, 62, 62],
+    [EA, TFEA, FEC, Li, PF6],
+    [amounts["EA"], amounts["TFEA"], amounts["FEC"], 55, 55],
     47.8,
     charge_scaling=0.8,
     properties=properties,
-    temperature=temperature
 )
-
 
 context = sim.context
 platform = context.getPlatform()
@@ -52,15 +56,15 @@ system = context.getSystem()
 integrator = context.getIntegrator()
 positions = context.getState(getPositions=True).getPositions(asNumpy=True)
 
-temp_string = str(temperature)
 
-output_dir = os.mkdir(f"TFEA_output_2_{temp_string}")
+output_dir = os.mkdir(f"TFEA_output_2_{name}")
 
+sim.reporters.append(
+    StateDataReporter(f"TFEA_output_2_{name}/state.txt", 1000, step=True, potentialEnergy=True, temperature=True,
+                      volume=True, density=True))
+sim.reporters.append(DCDReporter(f"TFEA_output_2_{name}/trajectory.dcd", 1000))
 
-sim.reporters.append(StateDataReporter(f"TFEA_output_2_{temp_string}/state.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
-sim.reporters.append(DCDReporter(f"TFEA_output_2_{temp_string}/trajectory.dcd", 1000))
-
-pdb_reporter = PDBReporter(f"TFEA_output_2_{temp_string}/topology.pdb", 1)
+pdb_reporter = PDBReporter(f"TFEA_output_2_{name}/topology.pdb", 1)
 pdb_reporter.report(sim, context.getState(getPositions=True))
 
 start = time.time()
@@ -69,7 +73,7 @@ start = time.time()
 sim.minimizeEnergy()
 
 # volume equilibration
-barostat_force_index = system.addForce(MonteCarloBarostat(1*atmosphere, 300*kelvin, 10))
+barostat_force_index = system.addForce(MonteCarloBarostat(1 * atmosphere, 300 * kelvin, 10))
 sim.context.reinitialize(preserveState=True)
 sim.step(1000000)
 system.removeForce(barostat_force_index)
@@ -92,9 +96,3 @@ end = time.time()
 print("time: ", end - start)
 print(platform.getPropertyNames())
 print(platform.getPropertyValue(context, "DeviceIndex"))
-
-
-
-
-
-

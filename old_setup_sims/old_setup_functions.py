@@ -147,7 +147,13 @@ def _smiles_to_system(smiles, counts, density=1.5):
 
 
 def _smiles_to_simulation(
-    smiles, counts, box_size, integrator=None, properties=None, charge_scaling=1, device_index=None, **sys_kwargs
+    smiles,
+    counts,
+    box_size,
+    integrator=None,
+    properties=None,
+    charge_scaling=1,
+    temperature=298,
 ):
     if integrator is None:
         integrator = LangevinMiddleIntegrator(
