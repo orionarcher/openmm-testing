@@ -54,13 +54,13 @@ positions = context.getState(getPositions=True).getPositions(asNumpy=True)
 
 temp_string = str(temperature)
 
-output_dir = os.mkdir(f"TFEA_output_2_{temp_string}")
+output_dir = os.mkdir(f"TFEA_output_3_{temp_string}")
 
 
-sim.reporters.append(StateDataReporter(f"TFEA_output_2_{temp_string}/state.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
-sim.reporters.append(DCDReporter(f"TFEA_output_2_{temp_string}/trajectory.dcd", 1000))
+sim.reporters.append(StateDataReporter(f"TFEA_output_3_{temp_string}/state.txt", 1000, step=True, potentialEnergy=True, temperature=True, volume=True, density=True))
+sim.reporters.append(DCDReporter(f"TFEA_output_3_{temp_string}/trajectory.dcd", 1000))
 
-pdb_reporter = PDBReporter(f"TFEA_output_2_{temp_string}/topology.pdb", 1)
+pdb_reporter = PDBReporter(f"TFEA_output_3_{temp_string}/topology.pdb", 1)
 pdb_reporter.report(sim, context.getState(getPositions=True))
 
 start = time.time()
