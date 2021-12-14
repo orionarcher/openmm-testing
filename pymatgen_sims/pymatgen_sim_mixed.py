@@ -6,6 +6,7 @@ from pymatgen.core import Molecule
 
 import numpy as np
 
+import time
 import os
 
 from openmm.app import StateDataReporter, PDBReporter, DCDReporter
@@ -56,8 +57,7 @@ sim = input_set.get_simulation(platformProperties={"DeviceIndex": str(rank)})
 
 dir = "mixed_runs"  # change
 name = run_names[rank]
-os.mkdir(f"{dir}")
-os.mkdir(f"{dir}/{name}")
+os.makedirs(f"{dir}/{name}", exist_ok=True)
 sim.reporters.append(
     StateDataReporter(f"{dir}/{name}/state.txt", 1000, step=True, potentialEnergy=True, temperature=True,
                       volume=True, density=True))
@@ -66,8 +66,8 @@ sim.reporters.append(DCDReporter(f"{dir}/{name}/trajectory.dcd", 1000))
 pdb_reporter = PDBReporter(f"{dir}/{name}/topology.pdb", 1)
 pdb_reporter.report(sim, sim.context.getState(getPositions=True))
 sim.minimizeEnergy()
+start = time.time()
 equilibrate_pressure(sim, 1000)
 anneal(sim, 400, [1000, 1000, 1000])
 sim.step(1000)
-
-print('finished')
+print("end time: ", start - time.time())
