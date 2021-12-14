@@ -57,14 +57,14 @@ integrator = context.getIntegrator()
 positions = context.getState(getPositions=True).getPositions(asNumpy=True)
 
 
-output_dir = os.mkdir(f"TFEA_output_2_{name}")
+output_dir = os.mkdir(f"mixed_output_2_{name}")
 
 sim.reporters.append(
-    StateDataReporter(f"TFEA_output_2_{name}/state.txt", 1000, step=True, potentialEnergy=True, temperature=True,
+    StateDataReporter(f"mixed_output_2_{name}/state.txt", 1000, step=True, potentialEnergy=True, temperature=True,
                       volume=True, density=True))
 sim.reporters.append(DCDReporter(f"TFEA_output_2_{name}/trajectory.dcd", 1000))
 
-pdb_reporter = PDBReporter(f"TFEA_output_2_{name}/topology.pdb", 1)
+pdb_reporter = PDBReporter(f"mixed_output_2_{name}/topology.pdb", 1)
 pdb_reporter.report(sim, context.getState(getPositions=True))
 
 start = time.time()
