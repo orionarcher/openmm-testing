@@ -52,7 +52,7 @@ run_names = { #change
     3: "250_EA_250_TFEA_100_FEC",
 }
 
-properties = {"DeviceIndex": f"1"}  # change
+properties = {"DeviceIndex": f"{rank}"}  # change
 sim = input_set.get_simulation(platformProperties={"DeviceIndex": str(rank)})
 
 dir = "mixed_runs"  # change
@@ -70,4 +70,4 @@ start = time.time()
 equilibrate_pressure(sim, 1000)
 anneal(sim, 400, [1000, 1000, 1000])
 sim.step(1000)
-print("end time: ", start - time.time())
+print("end time: ", time.time() - start)
