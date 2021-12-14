@@ -43,7 +43,7 @@ input_set = generator.get_input_set(
     density=1.06
 )
 
-run_names = { #change
+run_names = {  # change
     0: "EA_298",
     1: "EA_273",
     2: "EA_253",
@@ -51,14 +51,12 @@ run_names = { #change
 }
 
 
-def hide_platform():
-    platform = Platform.getPlatformByName("OpenCL")
-    return platform
+platform = Platform.getPlatformByName("OpenCL")
+properties = {"DeviceIndex": f"{0}"}  # change
 
-properties = {"DeviceIndex": f"{rank}"}  # change
 sim = input_set.get_simulation(
-    platform=hide_platform(),
-    platformProperties={"DeviceIndex": str(rank)},
+    platform=platform,
+    platformProperties=properties,
 )
 
 dir = "ea_runs"  # change
