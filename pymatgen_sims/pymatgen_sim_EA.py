@@ -52,7 +52,7 @@ run_names = {  # change
 
 
 platform = Platform.getPlatformByName("OpenCL")
-properties = {"DeviceIndex": f"{0}"}  # change
+properties = {"DeviceIndex": f"{rank}"}  # change
 
 sim = input_set.get_simulation(
     platform=platform,
