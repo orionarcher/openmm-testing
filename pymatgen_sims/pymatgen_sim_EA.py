@@ -55,7 +55,7 @@ platform = Platform.getPlatformByName("OpenCL")
 properties = {"DeviceIndex": f"{rank}"}  # change
 
 sim = input_set.get_simulation(
-    platform=platform,
+    platform=None,
     platformProperties=properties,
 )
 
