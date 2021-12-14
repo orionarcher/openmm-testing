@@ -9,6 +9,7 @@ import numpy as np
 import time
 import os
 
+from openmm import Platform
 from openmm.app import StateDataReporter, PDBReporter, DCDReporter
 
 EA = "CCOC(C)=O"
@@ -50,7 +51,11 @@ run_names = { #change
 }
 
 properties = {"DeviceIndex": f"{rank}"}  # change
-sim = input_set.get_simulation(platformProperties={"DeviceIndex": str(rank)})
+platform = Platform.getPlatformByName('OpenCL')
+sim = input_set.get_simulation(
+    platform=platform,
+    platformProperties={"DeviceIndex": str(rank)},
+)
 
 dir = "ea_runs"  # change
 name = run_names[rank]
