@@ -55,7 +55,7 @@ run_names = {  # change
 properties = {"DeviceIndex": f"{rank}"}  # change
 
 sim = input_set.get_simulation(
-    platform="OpenCL",
+    platform="CUDA",
     platformProperties=properties,
 )
 
