@@ -1,4 +1,4 @@
-from setup.setup_functions import _smiles_to_simulation
+from old_setup_functions import _smiles_to_simulation
 from openmm import MonteCarloBarostat, Platform
 
 from openmm.unit import *
@@ -24,7 +24,7 @@ rank = comm.Get_rank()
 
 print("rank: ", rank)
 
-properties = {"DeviceIndex": f"{rank}"}
+properties = {"DeviceIndex": f"1"}
 
 scaling_dict = {0: 0.7, 1: 0.8, 2: 0.9, 3: 1.0}
 charge_scaling = scaling_dict[rank]
@@ -65,22 +65,22 @@ sim.minimizeEnergy()
 # volume equilibration
 barostat_force_index = system.addForce(MonteCarloBarostat(1*atmosphere, 300*kelvin, 10))
 sim.context.reinitialize(preserveState=True)
-sim.step(200000)
+sim.step(1000)
 system.removeForce(barostat_force_index)
 sim.context.reinitialize(preserveState=True)
 
 # annealing
 for i in np.arange(0, 100, 1):
     integrator.setTemperature(300 * kelvin + 1 * i * kelvin)
-    sim.step(10000)
+    sim.step(10)
 
-sim.step(1000000)
+sim.step(1000)
 
 for i in np.arange(100, 0, -1):
     integrator.setTemperature(300 * kelvin + 1 * i * kelvin)
     sim.step(1)
 
-sim.step(5000000)
+sim.step(1000)
 
 end = time.time()
 print("time: ", end - start)
