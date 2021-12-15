@@ -2,6 +2,7 @@
 
 from pymatgen.io.openmm.generators import OpenMMSolutionGen
 from pymatgen.io.openmm.inputs import TopologyInput, StateInput, SystemInput, IntegratorInput
+from pymatgen.io.openmm.sets import OpenMMSet
 # from pymatgen.io.openmm.simulations import equilibrate_pressure, anneal
 from pymatgen.core import Molecule
 #
@@ -80,9 +81,22 @@ input_set.inputs['system.xml'] = good_system_input
 input_set.inputs['state.xml'] = good_state_input
 input_set.inputs['integrator.xml'] = good_integrator_input
 
-sim = input_set.get_simulation(
-    platform=platform,
-    platformProperties=properties,
+# sim = input_set.get_simulation(
+#     platform=platform,
+#     platformProperties=properties,
+# )
+
+input_set_2 = OpenMMSet(
+    inputs={
+        'topology.pdb': good_topology_input,
+        'system.xml': good_system_input,
+        'state.xml': good_state_input,
+        'integrator.xml': good_integrator_input,
+    },
+    topology_file='topology.pdb',
+    system_file='system.xml',
+    integrator_file='state.xml',
+    state_file='integrator.xml',
 )
 
 # bad_sim = openmm.app.Simulation(
