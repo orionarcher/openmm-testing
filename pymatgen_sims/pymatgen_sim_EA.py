@@ -1,17 +1,17 @@
 from mpi4py import MPI
 
-from pymatgen.io.openmm.generators import OpenMMSolutionGen
-from pymatgen.io.openmm.simulations import equilibrate_pressure, anneal
-from pymatgen.core import Molecule
-
-import numpy as np
-
-import time
-import os
-
-from openmm.app import StateDataReporter, PDBReporter, DCDReporter
-import openmm
-from openmm import Platform
+# from pymatgen.io.openmm.generators import OpenMMSolutionGen
+# from pymatgen.io.openmm.simulations import equilibrate_pressure, anneal
+# from pymatgen.core import Molecule
+#
+# import numpy as np
+#
+# import time
+# import os
+#
+# from openmm.app import StateDataReporter, PDBReporter, DCDReporter
+# import openmm
+# from openmm import Platform
 from old_setup_functions import _smiles_to_simulation
 
 
@@ -21,10 +21,10 @@ TFEA = "CC(=O)OCC(F)(F)F"
 FEC = "O=C1OC[C@H](F)O1"
 Li = "[Li+]"
 
-pf6_charges = np.load('../partial_charges/PF6.npy')
-pf6 = Molecule.from_file('../partial_charges/PF6.xyz')
-li_charges = np.load('../partial_charges/Li.npy')
-li = Molecule.from_file('../partial_charges/Li.xyz')
+# pf6_charges = np.load('../partial_charges/PF6.npy')
+# pf6 = Molecule.from_file('../partial_charges/PF6.xyz')
+# li_charges = np.load('../partial_charges/Li.npy')
+# li = Molecule.from_file('../partial_charges/Li.xyz')
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
