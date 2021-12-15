@@ -82,7 +82,7 @@ sim = openmm.app.Simulation(
     system,
     integrator,
     platform=platform,
-    platformProperties=properties
+    # platformProperties=properties
 )
 
 sim.context.setState(state)
