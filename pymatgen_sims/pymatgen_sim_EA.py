@@ -103,8 +103,8 @@ input_set_2 = OpenMMSet(
 
 input_set_2.get_simulation()
 
-input_set_2.get_simulation(platform=opencl)
 input_set_2.get_simulation(platform=cpu)
+input_set_2.get_simulation(platform=opencl)
 
 input_set_2.get_simulation(platform=opencl, platformProperties=properties)
 
