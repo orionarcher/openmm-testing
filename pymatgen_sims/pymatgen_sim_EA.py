@@ -38,7 +38,7 @@ good_sim = _smiles_to_simulation(
     [512, 88, 62, 62],
     47.8,
     charge_scaling=0.7,
-    properties={"DeviceIndex": f"{0}"},
+    properties=None,
     temperature=298
 )
 
