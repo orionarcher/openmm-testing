@@ -188,4 +188,4 @@ def _smiles_to_simulation(
     simulation = Simulation(topology, system, integrator, platform=platform, platformProperties=properties)
     simulation.context.setPositions(coordinates)
     # simulation.context.setPeriodicBoxVectors((4, 0, 0), (0, 4, 0), (0, 0, 4))
-    return simulation
+    return simulation, platform
