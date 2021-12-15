@@ -99,6 +99,12 @@ input_set_2 = OpenMMSet(
     state_file='integrator.xml',
 )
 
+input_set_2.get_simulation()
+
+input_set_2.get_simulation(platform=platform)
+
+input_set_2.get_simulation(platform=platform, platformProperties=properties)
+
 # bad_sim = openmm.app.Simulation(
 #     topology,
 #     system,
