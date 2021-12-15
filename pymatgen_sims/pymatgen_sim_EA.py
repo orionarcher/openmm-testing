@@ -86,7 +86,8 @@ input_set.inputs['integrator.xml'] = good_integrator_input
 sim = Simulation(
     good_topology,
     good_system,
-    integrator
+    integrator,
+    platform=opencl
 )
 
 # sim = input_set.get_simulation(
