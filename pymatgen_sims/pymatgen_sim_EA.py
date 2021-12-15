@@ -56,15 +56,17 @@ good_integrator_input = IntegratorInput(integrator)
 
 
 generator = OpenMMSolutionGen(
-    partial_charge_scaling={Li: 0.8, PF6: 0.8},
-    partial_charges=[(pf6, pf6_charges), (li, li_charges)],
+    # partial_charge_scaling={Li: 0.8, PF6: 0.8},
+    # partial_charges=[(pf6, pf6_charges), (li, li_charges)],
     temperature=298
 )
 
 input_set = generator.get_input_set(
-    {EA: 522, FEC: 78, Li: 54, PF6: 54},
+    {EA: 600},
+    # {EA: 522, FEC: 78, Li: 54, PF6: 54},
     density=1.06
 )
+input_set.get_simulation()
 
 properties = {"DeviceIndex": f"{0}"}
 opencl = Platform.getPlatformByName("OpenCL")
