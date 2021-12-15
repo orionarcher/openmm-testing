@@ -1,4 +1,4 @@
-from mpi4py import MPI
+# from mpi4py import MPI
 
 from pymatgen.io.openmm.generators import OpenMMSolutionGen
 # from pymatgen.io.openmm.simulations import equilibrate_pressure, anneal
@@ -28,8 +28,8 @@ pf6 = Molecule.from_file('../partial_charges/PF6.xyz')
 li_charges = np.load('../partial_charges/Li.npy')
 li = Molecule.from_file('../partial_charges/Li.xyz')
 
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
+# comm = MPI.COMM_WORLD
+# rank = comm.Get_rank()
 
 # sim = _smiles_to_simulation(
 #     [TFEA, FEC, Li, PF6],
