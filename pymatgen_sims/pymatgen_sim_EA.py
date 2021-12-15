@@ -56,6 +56,7 @@ good_integrator_input = IntegratorInput(integrator)
 
 properties = {"DeviceIndex": f"{0}"}
 opencl = Platform.getPlatformByName("OpenCL")
+print("external platform: ", opencl)
 cpu = Platform.getPlatformByName("CPU")
 
 generator = OpenMMSolutionGen(
