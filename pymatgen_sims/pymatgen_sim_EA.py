@@ -12,6 +12,8 @@ import os
 from openmm.app import StateDataReporter, PDBReporter, DCDReporter
 import openmm
 from openmm import Platform
+from old_setup_sims.old_setup_functions import _smiles_to_simulation
+
 
 EA = "CCOC(C)=O"
 PF6 = "F[P-](F)(F)(F)(F)F"
@@ -26,6 +28,17 @@ li = Molecule.from_file('../partial_charges/Li.xyz')
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
+
+sim = _smiles_to_simulation(
+    [TFEA, FEC, Li, PF6],
+    [512, 88, 62, 62],
+    47.8,
+    charge_scaling=0.7,
+    properties={"DeviceIndex": f"{1}"},
+    temperature=298
+)
+
+print("made first sim")
 
 temperature_dict = {0: 298, 1: 273, 2: 253, 3: 233}
 
