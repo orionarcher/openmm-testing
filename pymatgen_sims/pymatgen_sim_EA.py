@@ -12,7 +12,7 @@ import os
 from openmm.app import StateDataReporter, PDBReporter, DCDReporter
 import openmm
 from openmm import Platform
-from old_setup_sims.old_setup_functions import _smiles_to_simulation
+from old_setup_functions import _smiles_to_simulation
 
 
 EA = "CCOC(C)=O"
