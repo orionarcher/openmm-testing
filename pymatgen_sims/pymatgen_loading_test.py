@@ -13,5 +13,5 @@ cpu = Platform.getPlatformByName("CPU")
 # sim1.get_simulation(cpu)
 # sim2.get_simulation(cpu)
 #
-# sim1.get_simulation(opencl)
+sim1.get_simulation(opencl)
 sim2.get_simulation(opencl)
