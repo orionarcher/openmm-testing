@@ -9,7 +9,6 @@ import numpy as np
 import time
 import os
 
-from openmm import Platform
 from openmm.app import StateDataReporter, PDBReporter, DCDReporter
 import openmm
 from openmm import Platform
@@ -27,8 +26,6 @@ li = Molecule.from_file('../partial_charges/Li.xyz')
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
-
-print("rank: ", rank)
 
 temperature_dict = {0: 298, 1: 273, 2: 253, 3: 233}
 
@@ -57,10 +54,24 @@ run_names = {  # change
 properties = {"DeviceIndex": f"{rank}"}  # change
 platform = Platform.getPlatformByName("OpenCL")
 
-sim = input_set.get_simulation(
+
+system = input_set.inputs['system.xml'].get_system()
+topology = input_set.inputs['topology.pdb'].get_topology()
+integrator = input_set.inputs['integrator.xml'].get_integrator()
+state = input_set.inputs['state.xml'].get_state()
+
+sim = openmm.app.Simulation(
+    topology,
+    system,
+    integrator,
     platform=platform,
-    platformProperties=properties,
+    platformProperties=properties
 )
+
+# sim = input_set.get_simulation(
+#     platform=platform,
+#     platformProperties=properties,
+# )
 
 dir = "ea_runs"  # change
 name = run_names[rank]
