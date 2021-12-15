@@ -1,6 +1,7 @@
 # from mpi4py import MPI
 
 from pymatgen.io.openmm.generators import OpenMMSolutionGen
+from pymatgen.io.openmm.inputs import TopologyInput, StateInput, SystemInput, IntegratorInput
 # from pymatgen.io.openmm.simulations import equilibrate_pressure, anneal
 from pymatgen.core import Molecule
 #
@@ -13,7 +14,7 @@ import numpy as np
 import openmm
 from openmm import Platform
 from openmm import LangevinMiddleIntegrator
-from openmm.unit import *
+from openmm.unit import picosecond, kelvin
 from old_setup_functions import _smiles_to_simulation
 
 
@@ -31,59 +32,66 @@ li = Molecule.from_file('../partial_charges/Li.xyz')
 # comm = MPI.COMM_WORLD
 # rank = comm.Get_rank()
 
-# sim = _smiles_to_simulation(
-#     [TFEA, FEC, Li, PF6],
-#     [512, 88, 62, 62],
-#     47.8,
-#     charge_scaling=0.7,
-#     properties={"DeviceIndex": f"{1}"},
-#     temperature=298
-# )
+good_sim = _smiles_to_simulation(
+    [TFEA, FEC, Li, PF6],
+    [512, 88, 62, 62],
+    47.8,
+    charge_scaling=0.7,
+    properties={"DeviceIndex": f"{1}"},
+    temperature=298
+)
 
-print("made first sim")
-#
-# temperature_dict = {0: 298, 1: 273, 2: 253, 3: 233}
-#
-# temperature = temperature_dict[int(rank)]
-#
+integrator = LangevinMiddleIntegrator(
+    300 * kelvin, 1 / picosecond, 0.001 * picosecond
+)
+good_topology = good_sim.topology
+good_system = good_sim.context.getSystem()
+good_state = good_sim.context.getState()
+
+good_topology_input = TopologyInput(good_topology)
+good_system_input = SystemInput(good_system)
+good_state_input = StateInput(good_state)
+good_integrator_input = IntegratorInput(integrator)
+
+
 generator = OpenMMSolutionGen(
     partial_charge_scaling={Li: 0.8, PF6: 0.8},
     partial_charges=[(pf6, pf6_charges), (li, li_charges)],
     temperature=298
 )
-#
+
 input_set = generator.get_input_set(
     {EA: 522, FEC: 78, Li: 54, PF6: 54},
     density=1.06
 )
-#
-# run_names = {  # change
-#     0: "EA_298",
-#     1: "EA_273",
-#     2: "EA_253",
-#     3: "EA_233",
-# }
-#
-#
-# # platform = Platform.getPlatformByName("OpenCL")
-properties = {"DeviceIndex": f"{0}"}  # change
-platform = Platform.getPlatformByName("OpenCL")
-#
-#
-system = input_set.inputs['system.xml'].get_system()
-topology = input_set.inputs['topology.pdb'].get_topology()
-integrator = LangevinMiddleIntegrator(
-    300 * kelvin, 1 / picosecond, 0.001 * picoseconds
-)
-state = input_set.inputs['state.xml'].get_state()
 
-sim = openmm.app.Simulation(
-    topology,
-    system,
-    integrator,
-    platform=platform,
-    # platformProperties=properties
+properties = {"DeviceIndex": f"{1}"}
+platform = Platform.getPlatformByName("OpenCL")
+
+bad_system = input_set.inputs['system.xml'].get_system()
+bad_topology = input_set.inputs['topology.pdb'].get_topology()
+bad_integrator = LangevinMiddleIntegrator(
+    300 * kelvin, 1 / picosecond, 0.001 * picosecond
 )
+bad_state = input_set.inputs['state.xml'].get_state()
+
+input_set.inputs['topology.pdb'] = good_topology_input
+input_set.inputs['system.xml'] = good_system_input
+input_set.inputs['state.xml'] = good_state_input
+input_set.inputs['integrator.xml'] = good_integrator_input
+
+sim = input_set.get_simulation(
+    platform=platform,
+    platformProperties=properties,
+)
+
+# bad_sim = openmm.app.Simulation(
+#     topology,
+#     system,
+#     integrator,
+#     platform=platform,
+#     # platformProperties=properties
+# )
 print('complete')
 
 # sim.context.setState(state)
