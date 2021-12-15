@@ -37,7 +37,7 @@ good_sim = _smiles_to_simulation(
     [512, 88, 62, 62],
     47.8,
     charge_scaling=0.7,
-    properties={"DeviceIndex": f"{1}"},
+    properties={"DeviceIndex": f"{0}"},
     temperature=298
 )
 
@@ -65,7 +65,7 @@ input_set = generator.get_input_set(
     density=1.06
 )
 
-properties = {"DeviceIndex": f"{1}"}
+properties = {"DeviceIndex": f"{0}"}
 platform = Platform.getPlatformByName("OpenCL")
 
 bad_system = input_set.inputs['system.xml'].get_system()
