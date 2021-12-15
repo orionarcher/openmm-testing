@@ -13,8 +13,8 @@ import numpy as np
 #
 # from openmm.app import StateDataReporter, PDBReporter, DCDReporter
 import openmm
-from openmm import Platform
-from openmm import LangevinMiddleIntegrator
+from openmm import Platform, LangevinMiddleIntegrator
+from openmm.app import Simulation
 from openmm.unit import picosecond, kelvin
 from old_setup_functions import _smiles_to_simulation
 
@@ -82,6 +82,12 @@ input_set.inputs['topology.pdb'] = good_topology_input
 input_set.inputs['system.xml'] = good_system_input
 input_set.inputs['state.xml'] = good_state_input
 input_set.inputs['integrator.xml'] = good_integrator_input
+
+sim = Simulation(
+    good_topology,
+    good_system,
+    integrator
+)
 
 # sim = input_set.get_simulation(
 #     platform=platform,
