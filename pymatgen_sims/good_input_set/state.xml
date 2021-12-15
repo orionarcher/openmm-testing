@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<State openmmVersion="7.6" time="0" type="State" version="1">
+	<PeriodicBoxVectors>
+		<A x="4.78" y="0" z="0"/>
+		<B x="0" y="4.78" z="0"/>
+		<C x="0" y="0" z="4.78"/>
+	</PeriodicBoxVectors>
+</State>
