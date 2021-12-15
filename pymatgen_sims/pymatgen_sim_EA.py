@@ -10,8 +10,10 @@ import numpy as np
 # import os
 #
 # from openmm.app import StateDataReporter, PDBReporter, DCDReporter
-# import openmm
+import openmm
 from openmm import Platform
+from openmm import LangevinMiddleIntegrator
+from openmm.unit import *
 from old_setup_functions import _smiles_to_simulation
 
 
@@ -64,29 +66,31 @@ input_set = generator.get_input_set(
 #
 #
 # # platform = Platform.getPlatformByName("OpenCL")
-properties = {"DeviceIndex": f"{rank}"}  # change
+properties = {"DeviceIndex": f"{1}"}  # change
 platform = Platform.getPlatformByName("OpenCL")
 #
 #
-# system = input_set.inputs['system.xml'].get_system()
-# topology = input_set.inputs['topology.pdb'].get_topology()
-# integrator = input_set.inputs['integrator.xml'].get_integrator()
-# state = input_set.inputs['state.xml'].get_state()
-#
-# sim = openmm.app.Simulation(
-#     topology,
-#     system,
-#     integrator,
-#     platform=platform,
-#     platformProperties=properties
-# )
-#
-# sim.context.setState(state)
-#
-sim = input_set.get_simulation(
-    platform=platform,
-    platformProperties=properties,
+system = input_set.inputs['system.xml'].get_system()
+topology = input_set.inputs['topology.pdb'].get_topology()
+integrator = LangevinMiddleIntegrator(
+    300 * kelvin, 1 / picosecond, 0.001 * picoseconds
 )
+state = input_set.inputs['state.xml'].get_state()
+
+sim = openmm.app.Simulation(
+    topology,
+    system,
+    integrator,
+    platform=platform,
+    platformProperties=properties
+)
+
+sim.context.setState(state)
+
+# sim = input_set.get_simulation(
+#     platform=platform,
+#     platformProperties=properties,
+# )
 #
 # dir = "ea_runs"  # change
 # name = run_names[rank]
