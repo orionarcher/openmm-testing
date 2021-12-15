@@ -67,7 +67,9 @@ input_set = generator.get_input_set(
 )
 
 properties = {"DeviceIndex": f"{0}"}
-platform = Platform.getPlatformByName("OpenCL")
+opencl = Platform.getPlatformByName("OpenCL")
+cpu = Platform.getPlatformByName("CPU")
+
 
 bad_system = input_set.inputs['system.xml'].get_system()
 bad_topology = input_set.inputs['topology.pdb'].get_topology()
@@ -95,15 +97,16 @@ input_set_2 = OpenMMSet(
     },
     topology_file='topology.pdb',
     system_file='system.xml',
-    integrator_file='state.xml',
-    state_file='integrator.xml',
+    integrator_file='integrator.xml',
+    state_file='state.xml',
 )
 
 input_set_2.get_simulation()
 
-input_set_2.get_simulation(platform=platform)
+input_set_2.get_simulation(platform=opencl)
+input_set_2.get_simulation(platform=cpu)
 
-input_set_2.get_simulation(platform=platform, platformProperties=properties)
+input_set_2.get_simulation(platform=opencl, platformProperties=properties)
 
 # bad_sim = openmm.app.Simulation(
 #     topology,
