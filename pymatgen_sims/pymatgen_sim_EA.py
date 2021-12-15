@@ -42,6 +42,15 @@ good_sim, internal_opencl = _smiles_to_simulation(
     temperature=298
 )
 
+good_sim, internal_opencl = _smiles_to_simulation(
+    [TFEA, FEC, Li, PF6],
+    [512, 88, 62, 62],
+    47.8,
+    charge_scaling=0.7,
+    properties=None,
+    temperature=298
+)
+
 integrator = LangevinMiddleIntegrator(
     300 * kelvin, 1 / picosecond, 0.001 * picosecond
 )
