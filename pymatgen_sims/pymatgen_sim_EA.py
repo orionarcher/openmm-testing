@@ -11,6 +11,8 @@ import os
 
 from openmm import Platform
 from openmm.app import StateDataReporter, PDBReporter, DCDReporter
+import openmm
+from openmm import Platform
 
 EA = "CCOC(C)=O"
 PF6 = "F[P-](F)(F)(F)(F)F"
@@ -52,10 +54,11 @@ run_names = {  # change
 
 
 # platform = Platform.getPlatformByName("OpenCL")
-properties = {"DeviceIndex": f"0"}  # change
+properties = {"DeviceIndex": f"{rank}"}  # change
+platform = Platform.getPlatformByName("OpenCL")
 
 sim = input_set.get_simulation(
-    platform="OpenCL",
+    platform=platform,
     platformProperties=properties,
 )
 
