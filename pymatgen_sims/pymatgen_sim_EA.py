@@ -42,15 +42,6 @@ good_sim, internal_opencl = _smiles_to_simulation(
     temperature=298
 )
 
-good_sim, internal_opencl = _smiles_to_simulation(
-    [TFEA, FEC, Li, PF6],
-    [512, 88, 62, 62],
-    47.8,
-    charge_scaling=0.7,
-    properties=None,
-    temperature=298
-)
-
 integrator = LangevinMiddleIntegrator(
     300 * kelvin, 1 / picosecond, 0.001 * picosecond
 )
@@ -63,7 +54,7 @@ good_system_input = SystemInput(good_system)
 good_state_input = StateInput(good_state)
 good_integrator_input = IntegratorInput(integrator)
 
-properties = {"DeviceIndex": f"{0}"}
+properties = {"DeviceIndex": f"{1}"}
 opencl = Platform.getPlatformByName("OpenCL")
 print("external platform: ", opencl)
 cpu = Platform.getPlatformByName("CPU")
@@ -79,6 +70,8 @@ input_set = generator.get_input_set(
     # {EA: 522, FEC: 78, Li: 54, PF6: 54},
     density=1.06
 )
+input_set.write_input('bad_input_set')
+
 # input_set.get_simulation(platform=opencl)
 
 
@@ -95,7 +88,7 @@ input_set.inputs['system.xml'] = good_system_input
 input_set.inputs['state.xml'] = good_state_input
 input_set.inputs['integrator.xml'] = good_integrator_input
 
-sim = Simulation(good_topology, good_system, integrator, platform=internal_opencl)
+# sim = Simulation(good_topology, good_system, integrator, platform=internal_opencl)
 
 # sim = input_set.get_simulation(
 #     platform=platform,
@@ -114,6 +107,8 @@ input_set_2 = OpenMMSet(
     integrator_file='integrator.xml',
     state_file='state.xml',
 )
+
+input_set_2.write_input('good_input_set')
 
 input_set_2.get_simulation()
 
