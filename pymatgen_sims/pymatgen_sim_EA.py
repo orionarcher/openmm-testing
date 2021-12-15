@@ -68,6 +68,8 @@ sim = openmm.app.Simulation(
     platformProperties=properties
 )
 
+sim.context.setState(state)
+
 # sim = input_set.get_simulation(
 #     platform=platform,
 #     platformProperties=properties,
