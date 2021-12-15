@@ -66,7 +66,7 @@ input_set = generator.get_input_set(
 #
 #
 # # platform = Platform.getPlatformByName("OpenCL")
-properties = {"DeviceIndex": f"{1}"}  # change
+properties = {"DeviceIndex": f"{0}"}  # change
 platform = Platform.getPlatformByName("OpenCL")
 #
 #
