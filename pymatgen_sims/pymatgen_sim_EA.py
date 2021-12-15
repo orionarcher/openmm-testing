@@ -69,7 +69,7 @@ input_set = generator.get_input_set(
     # {EA: 522, FEC: 78, Li: 54, PF6: 54},
     density=1.06
 )
-input_set.get_simulation(platform=opencl)
+# input_set.get_simulation(platform=opencl)
 
 
 
