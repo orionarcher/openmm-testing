@@ -54,6 +54,9 @@ good_system_input = SystemInput(good_system)
 good_state_input = StateInput(good_state)
 good_integrator_input = IntegratorInput(integrator)
 
+properties = {"DeviceIndex": f"{0}"}
+opencl = Platform.getPlatformByName("OpenCL")
+cpu = Platform.getPlatformByName("CPU")
 
 generator = OpenMMSolutionGen(
     # partial_charge_scaling={Li: 0.8, PF6: 0.8},
@@ -66,11 +69,8 @@ input_set = generator.get_input_set(
     # {EA: 522, FEC: 78, Li: 54, PF6: 54},
     density=1.06
 )
-input_set.get_simulation()
+input_set.get_simulation(platform=opencl)
 
-properties = {"DeviceIndex": f"{0}"}
-opencl = Platform.getPlatformByName("OpenCL")
-cpu = Platform.getPlatformByName("CPU")
 
 
 bad_system = input_set.inputs['system.xml'].get_system()
