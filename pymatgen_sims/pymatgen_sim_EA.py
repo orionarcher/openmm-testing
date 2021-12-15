@@ -33,7 +33,7 @@ li = Molecule.from_file('../partial_charges/Li.xyz')
 # comm = MPI.COMM_WORLD
 # rank = comm.Get_rank()
 
-good_sim = _smiles_to_simulation(
+good_sim, internal_opencl = _smiles_to_simulation(
     [TFEA, FEC, Li, PF6],
     [512, 88, 62, 62],
     47.8,
@@ -85,7 +85,7 @@ input_set.inputs['system.xml'] = good_system_input
 input_set.inputs['state.xml'] = good_state_input
 input_set.inputs['integrator.xml'] = good_integrator_input
 
-sim = Simulation(good_topology, good_system, integrator, platform=opencl)
+sim = Simulation(good_topology, good_system, integrator, platform=internal_opencl)
 
 # sim = input_set.get_simulation(
 #     platform=platform,
