@@ -71,7 +71,9 @@ input_set = generator.get_input_set(
     density=1.06
 )
 
-input_set.get_simulation()
+input_set.get_simulation(
+    platform=opencl
+)
 
 # input_set.write_input('bad_input_set')
 
