@@ -33,31 +33,31 @@ li = Molecule.from_file('../partial_charges/Li.xyz')
 # comm = MPI.COMM_WORLD
 # rank = comm.Get_rank()
 
-good_sim, internal_opencl = _smiles_to_simulation(
-    [TFEA, FEC, Li, PF6],
-    [512, 88, 62, 62],
-    47.8,
-    charge_scaling=0.7,
-    properties=None,
-    temperature=298
-)
+# good_sim, internal_opencl = _smiles_to_simulation(
+#     [TFEA, FEC, Li, PF6],
+#     [512, 88, 62, 62],
+#     47.8,
+#     charge_scaling=0.7,
+#     properties=None,
+#     temperature=298
+# )
 
 integrator = LangevinMiddleIntegrator(
     300 * kelvin, 1 / picosecond, 0.001 * picosecond
 )
-good_topology = good_sim.topology
-good_system = good_sim.context.getSystem()
-good_state = good_sim.context.getState()
-
-good_topology_input = TopologyInput(good_topology)
-good_system_input = SystemInput(good_system)
-good_state_input = StateInput(good_state)
-good_integrator_input = IntegratorInput(integrator)
+# good_topology = good_sim.topology
+# good_system = good_sim.context.getSystem()
+# good_state = good_sim.context.getState()
+#
+# good_topology_input = TopologyInput(good_topology)
+# good_system_input = SystemInput(good_system)
+# good_state_input = StateInput(good_state)
+# good_integrator_input = IntegratorInput(integrator)
 
 properties = {"DeviceIndex": f"{1}"}
 opencl = Platform.getPlatformByName("OpenCL")
-print("external platform: ", opencl)
-cpu = Platform.getPlatformByName("CPU")
+# print("external platform: ", opencl)
+# cpu = Platform.getPlatformByName("CPU")
 
 generator = OpenMMSolutionGen(
     # partial_charge_scaling={Li: 0.8, PF6: 0.8},
@@ -70,52 +70,55 @@ input_set = generator.get_input_set(
     # {EA: 522, FEC: 78, Li: 54, PF6: 54},
     density=1.06
 )
-input_set.write_input('bad_input_set')
+
+input_set.get_simulation()
+
+# input_set.write_input('bad_input_set')
 
 # input_set.get_simulation(platform=opencl)
 
 
-
-bad_system = input_set.inputs['system.xml'].get_system()
-bad_topology = input_set.inputs['topology.pdb'].get_topology()
-bad_integrator = LangevinMiddleIntegrator(
-    300 * kelvin, 1 / picosecond, 0.001 * picosecond
-)
-bad_state = input_set.inputs['state.xml'].get_state()
-
-input_set.inputs['topology.pdb'] = good_topology_input
-input_set.inputs['system.xml'] = good_system_input
-input_set.inputs['state.xml'] = good_state_input
-input_set.inputs['integrator.xml'] = good_integrator_input
-
-# sim = Simulation(good_topology, good_system, integrator, platform=internal_opencl)
-
-# sim = input_set.get_simulation(
-#     platform=platform,
-#     platformProperties=properties,
+#
+# bad_system = input_set.inputs['system.xml'].get_system()
+# bad_topology = input_set.inputs['topology.pdb'].get_topology()
+# bad_integrator = LangevinMiddleIntegrator(
+#     300 * kelvin, 1 / picosecond, 0.001 * picosecond
 # )
-
-input_set_2 = OpenMMSet(
-    inputs={
-        'topology.pdb': good_topology_input,
-        'system.xml': good_system_input,
-        'state.xml': good_state_input,
-        'integrator.xml': good_integrator_input,
-    },
-    topology_file='topology.pdb',
-    system_file='system.xml',
-    integrator_file='integrator.xml',
-    state_file='state.xml',
-)
-
-input_set_2.write_input('good_input_set')
-
-input_set_2.get_simulation()
-
-input_set_2.get_simulation(platform=cpu)
-input_set_2.get_simulation(platform=opencl)
-
-input_set_2.get_simulation(platform=opencl, platformProperties=properties)
+# bad_state = input_set.inputs['state.xml'].get_state()
+#
+# input_set.inputs['topology.pdb'] = good_topology_input
+# input_set.inputs['system.xml'] = good_system_input
+# input_set.inputs['state.xml'] = good_state_input
+# input_set.inputs['integrator.xml'] = good_integrator_input
+#
+# # sim = Simulation(good_topology, good_system, integrator, platform=internal_opencl)
+#
+# # sim = input_set.get_simulation(
+# #     platform=platform,
+# #     platformProperties=properties,
+# # )
+#
+# input_set_2 = OpenMMSet(
+#     inputs={
+#         'topology.pdb': good_topology_input,
+#         'system.xml': good_system_input,
+#         'state.xml': good_state_input,
+#         'integrator.xml': good_integrator_input,
+#     },
+#     topology_file='topology.pdb',
+#     system_file='system.xml',
+#     integrator_file='integrator.xml',
+#     state_file='state.xml',
+# )
+#
+# input_set_2.write_input('good_input_set')
+#
+# input_set_2.get_simulation()
+#
+# input_set_2.get_simulation(platform=cpu)
+# input_set_2.get_simulation(platform=opencl)
+#
+# input_set_2.get_simulation(platform=opencl, platformProperties=properties)
 
 # bad_sim = openmm.app.Simulation(
 #     topology,
