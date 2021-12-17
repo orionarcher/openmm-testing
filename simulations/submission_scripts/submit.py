@@ -53,8 +53,8 @@ sim.reporters.append(
 start = time.time()
 
 sim.minimizeEnergy()
-equilibrate_pressure(sim, 100)
-anneal(sim, 400, [100, 100, 100])
-sim.step(600)
+equilibrate_pressure(sim, 1000000)
+anneal(sim, 400, [1000000, 1000000, 1000000])
+sim.step(5000000)
 
 print("total runtime: ", time.time() - start)
