@@ -37,44 +37,21 @@ other_mixes = {
     "all200": {EAf: 200, fEA: 200, fEAf: 200}
 }
 
+all_mixes = {
+    "FEC": FEC_mixes,
+    "EA": EA_mixes,
+    "other": other_mixes
+}
+
 generator = OpenMMSolutionGen(
     partial_charge_scaling={Li: 0.7, PF6: 0.7},
     partial_charges=[(pf6, pf6_charges), (li, li_charges)],
 )
-
-for amounts in FEC_mixes:
-    all_amounts = {**amounts, Li: 55, PF6: 55}
-    input_set = generator.get_input_set(
-        all_amounts,
-        density=1.4
-    )
-    input_set.write_input(f'mixed_sims/{name}')
-
-
-temps = [298, 273, 253, 233]
-
-for temp in temps:
-    generator = OpenMMSolutionGen(
-        partial_charge_scaling={Li: 0.7, PF6: 0.7},
-        partial_charges=[(pf6, pf6_charges), (li, li_charges)],
-        temperature=temp,
-    )
-    input_set = generator.get_input_set(
-        {EAf: 512, FEC: 88, Li: 54, PF6: 54},
-        density=1.36
-    )
-    input_set.write_input(f'EAf_sims/{temp}')
-
-
-for temp in temps:
-    generator = OpenMMSolutionGen(
-        partial_charge_scaling={Li: 0.7, PF6: 0.7},
-        partial_charges=[(pf6, pf6_charges), (li, li_charges)],
-        temperature=temp,
-    )
-    input_set = generator.get_input_set(
-        {EA: 522, FEC: 78, Li: 54, PF6: 54},
-        density=1.06
-    )
-    input_set.write_input(f'EA_sims/{temp}')
-
+for mix_set_name, mix_set in all_mixes.items():
+    for run_name, amounts in mix_set.items():
+        all_amounts = {**amounts, Li: 55, PF6: 55}
+        input_set = generator.get_input_set(
+            all_amounts,
+            density=1.4
+        )
+        input_set.write_input(f'mixed_sims/{mix_set_name}/{run_name}')
