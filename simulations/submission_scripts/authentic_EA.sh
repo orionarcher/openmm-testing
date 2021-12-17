@@ -7,4 +7,4 @@
 #SBATCH --gpus-per-task=1
 
 source activate openmm
-srun python submit.py ../mixed_sims/other $SCRATCH/mixed_sims/other
+srun python submit.py ../real_sims/EA $SCRATCH/real_sims/EA
