@@ -26,21 +26,17 @@ target_paths = [path for path in input_dir.iterdir()]
 assert len(target_paths) == 4, "there must be exactly 4 jobs to run"
 
 target_path = target_paths[rank]
-
 input_set = OpenMMSet.from_directory(target_path)
-
 platform = Platform.getPlatformByName("OpenCL")
-
 sim = input_set.get_simulation(
     platform=platform,
     platformProperties={"DeviceIndex": str(rank)},
 )
 
+output_dir = output_dir / target_path.stem
 output_dir.mkdir(parents=True, exist_ok=True)
-
 pdb_reporter = PDBReporter(str(output_dir / "topology.pdb"), 1)
 pdb_reporter.report(sim, sim.context.getState(getPositions=True))
-
 sim.reporters.append(DCDReporter(str(output_dir / "trajectory.dcd"), 1000))
 sim.reporters.append(
     StateDataReporter(
@@ -57,8 +53,8 @@ sim.reporters.append(
 start = time.time()
 
 sim.minimizeEnergy()
-equilibrate_pressure(sim, 1000)
-anneal(sim, 400, [1000, 1000, 1000])
-sim.step(2000)
+equilibrate_pressure(sim, 100)
+anneal(sim, 400, [100, 100, 100])
+sim.step(600)
 
 print("total runtime: ", time.time() - start)
